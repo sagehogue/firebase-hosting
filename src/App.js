@@ -489,6 +489,7 @@ function App() {
                                   O3: ${option3}
                                   O4: ${option4}
                                   OT: ${other}
+                                  Comment: ${comments}
                        `);
 
                   axios
