@@ -478,6 +478,8 @@ function App() {
                 return actions.order.capture().then(function (details) {
                   // This function shows a transaction success message to your buyer.
                   console.log(details);
+                  let { create_time, id, payer, purchase_units, status } =
+                    details;
                   console.log(`GO: ${generalOffering},
                                   TI: ${tithes},
                                   YM: ${youthMinistry}
@@ -488,9 +490,40 @@ function App() {
                                   O4: ${option4}
                                   OT: ${other}
                        `);
-                  alert(
-                    `Thank you for your generosity, ${details.payer.name.given_name}!`
-                  );
+
+                  axios
+                    .request({
+                      url: "/api/donation",
+                      method: "post",
+                      data: {
+                        GO: generalOffering,
+                        TI: tithes,
+                        YM: youthMinistry,
+                        WM: womensMinistry,
+                        O1: option1,
+                        O2: option2,
+                        O3: option3,
+                        O4: option4,
+                        OT: other,
+                        total: total,
+                        comment: comments,
+                        donor: details.payer.name.given_name,
+                        time: create_time,
+                        id,
+                        payer,
+                        purchase_units,
+                        status,
+                      },
+                    })
+                    .then(function (response) {
+                      console.log(response);
+                      alert(
+                        `Thank you for your generosity, ${details.payer.name.given_name}!`
+                      );
+                    })
+                    .catch(function (error) {
+                      console.log(error);
+                    });
                 });
               }}
               onError={(err) => {
