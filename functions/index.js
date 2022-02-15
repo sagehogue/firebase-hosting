@@ -53,15 +53,7 @@ server.post("/api/donation", (request, response) => {
     const docRef = db.collection("donations").doc(id);
 
     docRef.set({
-      GO,
-      TI,
-      YM,
-      WM,
-      O1,
-      O2,
-      O3,
-      O4,
-      OT,
+      donation: { GO, TI, YM, WM, O1, O2, O3, O4, OT },
       total,
       comment,
       donor,
@@ -98,49 +90,47 @@ exports.sendEmail = functions.firestore
     const mailOptions = {
       from: process.env.NODEMAIL_USERNAME,
       to: process.env.DESTINATION_EMAIL,
-      subject: `New Donation of ${snap.data().total}`,
+      subject: `New Donation of ${snap.data().total} ${
+        snap.data().purchase_units[0].amount.currency_code
+      }`,
       html: `<h1>New Donation of ${snap.data().total}</h1>
     <p> ${snap.data().payer.name.given_name} ${
-        snap.data().payer.name.last_name
+        snap.data().payer.name.surname
       } kindly donated ${
         snap.data().total
       } with the following distribution at ${snap.data().time}. </p>
     <ul>
-    <li><b>General Offering: </b>${snap.data().donation.GO} </li>
-    <li><b>Tithes: </b>${snap.data().donation.TI} </li>
-    <li><b>Youth Ministry: </b>${snap.data().donation.YM} </li>
-    <li><b>Women's Ministry: </b>${snap.data().donation.WM} </li>
+    <li><b>General Offering: </b>${snap.data().donation.GO} ${
+        snap.data().purchase_units[0].amount.currency_code
+      }</li>
+    <li><b>Tithes: </b>${snap.data().donation.TI} ${
+        snap.data().purchase_units[0].amount.currency_code
+      }</li>
+    <li><b>Youth Ministry: </b>${snap.data().donation.YM} ${
+        snap.data().purchase_units[0].amount.currency_code
+      }</li>
+    <li><b>Women's Ministry: </b>${snap.data().donation.WM} ${
+        snap.data().purchase_units[0].amount.currency_code
+      }</li>
 
-<li><b>Option1: </b>${snap.data().donation.O1} </li>
-<li><b>Option2: </b>${snap.data().donation.O2} </li>
-<li><b>Option3: </b>${snap.data().donation.O3} </li>
-<li><b>Option4: </b>${snap.data().donation.O4} </li>
-<li><b>Other: </b>${snap.data().donation.OT} </li>
+<li><b>Option1: </b>${snap.data().donation.O1} ${
+        snap.data().purchase_units[0].amount.currency_code
+      }</li>
+<li><b>Option2: </b>${snap.data().donation.O2} ${
+        snap.data().purchase_units[0].amount.currency_code
+      }</li>
+<li><b>Option3: </b>${snap.data().donation.O3} ${
+        snap.data().purchase_units[0].amount.currency_code
+      }</li>
+<li><b>Option4: </b>${snap.data().donation.O4} ${
+        snap.data().purchase_units[0].amount.currency_code
+      }</li>
+<li><b>Other: </b>${snap.data().donation.OT} ${
+        snap.data().purchase_units[0].amount.currency_code
+      }</li>
 </ul>
-
 <p>Donation comment: ${snap.data().comment}</p>
-
-GO,
-      TI,
-      YM,
-      WM,
-      O1,
-      O2,
-      O3,
-      O4,
-      OT,
-      total,
-      comment,
-      donor,
-      time,
-      id,
-      payer,
-      purchase_units,
-      status,
-
-     <p> <b>Email: </b>${snap.data().email} </p>
-     <p> <b>Comment: </b>${snap.data().comment} </p>
-     <p> <b>Body: </b>${snap.data()} </p>
+     <p> <b>Donor Email: </b>${snap.data().payer.email_address} </p>
      `,
     };
     return transporter.sendMail(mailOptions, (error, data) => {

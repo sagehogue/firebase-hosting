@@ -508,7 +508,7 @@ function App() {
                         OT: other,
                         total: total,
                         comment: comments,
-                        donor: details.payer.name.given_name,
+                        donor: `${details.payer.name.given_name} ${details.payer.name.surname}`,
                         time: create_time,
                         id,
                         payer,
